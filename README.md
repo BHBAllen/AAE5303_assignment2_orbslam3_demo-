@@ -404,7 +404,7 @@ This figure is generated from the same inputs used for evaluation (`ground_truth
 
 ### Strengths
 
-1. **High evaluation coverage**: 87% completeness indicates that a large portion of the ground-truth poses can be associated and evaluated.
+1. **High evaluation coverage**: 95.65% completeness indicates that a large portion of the ground-truth poses can be associated and evaluated.
 
 2. **End-to-end pipeline**: The system produces a usable TUM trajectory and can be evaluated reproducibly with standard tooling.
 
@@ -431,7 +431,7 @@ This figure is generated from the same inputs used for evaluation (`ground_truth
 This assignment demonstrates monocular Visual Odometry implementation using ORB-SLAM3 on UAV aerial imagery. Key findings:
 
 1. ✅ **System Operation**: ORB-SLAM3 successfully processes 3,833 images over 1.9 km trajectory
-2. ✅ **Evaluation coverage**: 87.01% completeness shows that many poses can be evaluated against RTK ground truth
+2. ✅ **Evaluation coverage**: 95.65% completeness shows that many poses can be evaluated against RTK ground truth
 3. ⚠️ **Tracking stability**: Frequent tracking failures indicate the need for parameter tuning and stronger robustness measures
 4. ❌ **Accuracy**: The current baseline exhibits very large global error and drift rates on this sequence
 
