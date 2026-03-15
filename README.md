@@ -43,7 +43,7 @@ This report presents the implementation and evaluation of **Monocular Visual Odo
 | **RPE Trans Drift** | **1.7182 m/m** | Translation drift rate (mean error per meter, delta=10 m) |
 | **RPE Rot Drift** | **382.9557 deg/100m** | Rotation drift rate (mean angle per 100 m, delta=10 m) |
 | **Completeness** | **95.65%** | Matched poses / total ground-truth poses (1870 / 1955) |
-| **Estimated poses** | 1870 | Trajectory poses in `1870 final_best_trajectory.txt` |
+| **Estimated poses** | 1870 | Trajectory poses in ` final_best_trajectory.txt` |
 
 ---
 
@@ -234,12 +234,13 @@ The dataset is from the **MARS-LVIG** UAV dataset, captured over Hong Kong Islan
 | Property | Value |
 |----------|-------|
 | **Dataset Name** | HKisland_GNSS03 |
-| **Source** | MARS-LVIG / UAVScenes |
+| **Source** | MARS-LVIG  |
 | **Duration** | 390.78 seconds (~6.5 minutes) |
 | **Total Images** | 3,833 frames |
-| **Image Resolution** | 2448 × 2048 pixels |
+| **Image Resolution (Original)** | 2448 × 2048 pixels |
+| **Image Resolution (SLAM Input)** | 640 × 480 pixels |
 | **Frame Rate** | ~10 Hz |
-| **Trajectory Length** | ~1,900 meters |
+| **Trajectory Length** | ~1,800 meters |
 | **Height Variation** | 0 - 90 meters |
 
 ### Data Sources
@@ -273,14 +274,15 @@ RTK (Real-Time Kinematic) GPS provides centimeter-level positioning accuracy:
 | **Vocabulary** | ORBvoc.txt (pre-trained) |
 | **Operating System** | Linux (Ubuntu 22.04) |
 
-### Camera Calibration
+### Camera Calibration (camera_config_640.yaml)
 
 ```yaml
 Camera.type: "PinHole"
-Camera.fx: 1444.43
-Camera.fy: 1444.34
-Camera.cx: 1179.50
-Camera.cy: 1044.90
+
+Camera.fx: 377.63
+Camera.fy: 338.52
+Camera.cx: 308.37
+Camera.cy: 244.90
 
 Camera.k1: -0.0560
 Camera.k2: 0.1180
@@ -288,10 +290,10 @@ Camera.p1: 0.00122
 Camera.p2: 0.00064
 Camera.k3: -0.0627
 
-Camera.width: 2448
-Camera.height: 2048
+Camera.width: 640
+Camera.height: 480
 Camera.fps: 10.0
-Camera.RGB: 0  # OpenCV images are typically BGR by default
+Camera.RGB: 0 # OpenCV images are typically BGR by default
 ```
 
 **Note on ORB-SLAM3 settings format**:
@@ -303,15 +305,23 @@ Camera.RGB: 0  # OpenCV images are typically BGR by default
 
 | Parameter | Value | Description |
 |-----------|-------|-------------|
-| `nFeatures` | 1500 | Features per frame |
+| `nFeatures` | 4000 | Features per frame |
 | `scaleFactor` | 1.2 | Pyramid scale factor |
 | `nLevels` | 8 | Pyramid levels |
-| `iniThFAST` | 20 | Initial FAST threshold |
-| `minThFAST` | 7 | Minimum FAST threshold |
+| `iniThFAST` | 10 | Initial FAST threshold |
+| `minThFAST` | 3 | Minimum FAST threshold |
 
-### Running ORB-SLAM3 (example)
+### Running ORB-SLAM3
 
-This report assumes you have already generated a TUM-format trajectory file (e.g., `CameraTrajectory.txt` or `KeyFrameTrajectory.txt`) from ORB-SLAM3.
+ORB-SLAM3 is used to generate a TUM-format trajectory file from the HKIsland_GNSS03 dataset.
+
+The final trajectory used for evaluation in this repository is:
+
+`output/final_best_trajectory.txt`
+
+This trajectory was produced using the configuration file:
+
+`docs/camera_config_640.yaml`
 
 ---
 
@@ -320,33 +330,39 @@ This report assumes you have already generated a TUM-format trajectory file (e.g
 ### Evaluation Results
 
 ```
-================================================================================
+================================================================
 VISUAL ODOMETRY EVALUATION RESULTS
-================================================================================
+================================================================
 
 Ground Truth: RTK trajectory (1,955 poses)
-Estimated:    ORB-SLAM3 camera trajectory (2,826 poses)
-Matched Poses: 1,701 / 1,955 (87.01%)  ← Completeness
+Estimated: ORB-SLAM3 trajectory (1,870 matched poses)
 
+Matched Poses: 1,870 / 1,955 (95.65%)  ← Completeness
+
+---------------------------------------------------------------
 METRIC 1: ATE (Absolute Trajectory Error)
-────────────────────────────────────────
-RMSE:   132.1547 m
-Mean:   114.6344 m
-Std:    65.7558 m
+---------------------------------------------------------------
 
-METRIC 2: RPE Translation Drift (distance-based, delta=10 m)
-────────────────────────────────────────
-Mean translational RPE over 10 m: 28.7014 m
-Translation drift rate:           2.8701 m/m
+RMSE: 117.3092 m
+Mean: 108.7885 m
+Std: 43.8920 m
 
-METRIC 3: RPE Rotation Drift (distance-based, delta=10 m)
-────────────────────────────────────────
-Mean rotational RPE over 10 m: 17.3332 deg
-Rotation drift rate:        173.3319 deg/100m
+---------------------------------------------------------------
+METRIC 2: RPE Translation Drift (distance-based, delta = 10 m)
+---------------------------------------------------------------
 
-================================================================================
+Mean translational RPE over 10 m: 17.1816 m
+Translation drift rate: 1.7182 m/m
+
+---------------------------------------------------------------
+METRIC 3: RPE Rotation Drift (distance-based, delta = 10 m)
+---------------------------------------------------------------
+
+Mean rotational RPE over 10 m: 38.2956 deg
+Rotation drift rate: 382.9557 deg/100m
+
+================================================================
 ```
-
 ### Trajectory Alignment Statistics
 
 | Parameter | Value |
@@ -354,16 +370,16 @@ Rotation drift rate:        173.3319 deg/100m
 | **Sim(3) scale correction** | 6.5944 |
 | **Sim(3) translation** | [-45.426, -95.559, 36.060] m |
 | **Association threshold** | \(t_{max\_diff}\) = 0.1 s |
-| **Association rate (Completeness)** | 87.01% |
+| **Pose association rate** | 95.65% |
 
 ### Performance Analysis
 
 | Metric | Value | Grade | Interpretation |
-|--------|-------|-------|----------------|
-| **ATE RMSE** | 132.15 m | F | Very large global error after alignment |
-| **RPE Trans Drift** | 2.87 m/m | D | Large local drift per traveled distance |
-| **RPE Rot Drift** | 173.33 deg/100m | F | Severe orientation drift |
-| **Completeness** | 87.01% | B | Many poses can be evaluated, but accuracy is low |
+|------|------|------|------|
+| **ATE RMSE** | 117.31 m | F | Large global trajectory error after alignment |
+| **RPE Trans Drift** | 1.72 m/m | D | Significant local drift per traveled distance |
+| **RPE Rot Drift** | 382.96 deg/100m | F | Severe orientation drift |
+| **Completeness** | 95.65% | B | High proportion of poses successfully evaluated |
 
 ---
 
