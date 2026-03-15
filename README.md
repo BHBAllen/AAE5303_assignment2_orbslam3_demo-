@@ -43,7 +43,7 @@ This report presents the implementation and evaluation of **Monocular Visual Odo
 | **RPE Trans Drift** | **1.7182 m/m** | Translation drift rate (mean error per meter, delta=10 m) |
 | **RPE Rot Drift** | **382.9557 deg/100m** | Rotation drift rate (mean angle per 100 m, delta=10 m) |
 | **Completeness** | **95.65%** | Matched poses / total ground-truth poses (1870 / 1955) |
-| **Estimated poses** | 1870 | Trajectory poses in ` final_best_trajectory.txt` |
+| **Estimated poses** | 1870 | Trajectory poses in `final_best_trajectory.txt` |
 
 ---
 
@@ -376,7 +376,7 @@ Rotation drift rate: 382.9557 deg/100m
 
 | Metric | Value | Grade | Interpretation |
 |------|------|------|------|
-| **ATE RMSE** | 117.31 m | F | Large global trajectory error after alignment |
+| **ATE RMSE** | 117.3092 m | F | Large global trajectory error after alignment |
 | **RPE Trans Drift** | 1.72 m/m | D | Significant local drift per traveled distance |
 | **RPE Rot Drift** | 382.96 deg/100m | F | Severe orientation drift |
 | **Completeness** | 95.65% | B | High proportion of poses successfully evaluated |
@@ -420,7 +420,7 @@ This figure is generated from the same inputs used for evaluation (`ground_truth
 
 1. **Fast UAV Motion**: Aggressive flight maneuvers cause motion blur and large inter-frame displacements.
 
-2. **Feature Extraction**: Default ORB parameters (1500 features) may be insufficient for high-resolution images.
+2. **Feature Extraction**: Even with 4000 ORB features, aerial scenes still provide weak geometric constraints.
 
 3. **Calibration Accuracy**: Camera intrinsics and distortion parameters affect pose estimation quality.
 
