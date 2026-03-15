@@ -39,11 +39,11 @@ This report presents the implementation and evaluation of **Monocular Visual Odo
 
 | Metric | Value | Description |
 |--------|-------|-------------|
-| **ATE RMSE** | **17.3092 m** | Global accuracy after Sim(3) alignment (scale corrected) |
+| **ATE RMSE** | **117.3092 m** | Global accuracy after Sim(3) alignment (scale corrected) |
 | **RPE Trans Drift** | **1.7182 m/m** | Translation drift rate (mean error per meter, delta=10 m) |
 | **RPE Rot Drift** | **382.9557 deg/100m** | Rotation drift rate (mean angle per 100 m, delta=10 m) |
-| **Completeness** | **95.65%** | Matched poses / total ground-truth poses (1701 / 1955) |
-| **Estimated poses** | 2,826 | Trajectory poses in `CameraTrajectory.txt` |
+| **Completeness** | **95.65%** | Matched poses / total ground-truth poses (1870 / 1955) |
+| **Estimated poses** | 1870 | Trajectory poses in `1870 final_best_trajectory.txt` |
 
 ---
 
