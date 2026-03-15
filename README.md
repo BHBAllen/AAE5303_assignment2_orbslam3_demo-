@@ -469,9 +469,10 @@ AAE5303_assignment2_orbslam3_demo-/
 ├── README.md                    # This report
 ├── requirements.txt             # Python dependencies
 ├── figures/
-│   └── trajectory_evaluation.png
+│   └── trajectory_best_trajectory_evaluation.png
 ├── output/
-│   └── evaluation_report.json
+ ├── final_best_trajectory.txt
+ └── final_best_report.json
 ├── scripts/
 │   └── evaluate_vo_accuracy.py
 ├── docs/
